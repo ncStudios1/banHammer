@@ -1,0 +1,26 @@
+local plrS = game:GetService("Players")
+local plr = plrS.LocalPlayer --use this to find the player
+
+local mouse =  plr:GetMouse() --get the mouse
+
+local tool = script.Parent --the kick hammer
+
+local textBox = plr.PlayerGui.ScreenGui.TextBox -- textbox we set up
+
+mouse.Button1Down:Connect(function() --detects when clicked
+	local gSpot = mouse.Target--finds the object the mouse clicked on
+	
+	if gSpot.Parent:FindFirstChild("Humanoid") ~= nil and tool.Parent.Name ~= "Backpack" then
+		textBox.Visible = true
+		
+		local enemyPlr = plrS:GetPlayerFromCharacter(gSpot.Parent)--use this to find there plr
+		
+		textBox.FocusLost:Connect(function(enterPressed) --use this to know when they exit textbox
+			
+			game.ReplicatedStorage.kickThisMan:FireServer(enemyPlr, textBox.Text) --fire server with msg and plr
+			
+			textBox.Visible = false --reset text box
+			textBox.Text = ""
+		end)
+	end
+end)
