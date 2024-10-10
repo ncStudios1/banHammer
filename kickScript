@@ -1,0 +1,28 @@
+local remote = game.ReplicatedStorage:WaitForChild("kickThisMan") --find remote
+
+local animation = Instance.new("Animation") --set up animation
+animation.AnimationId = "rbxassetid://97824823291828" --make your own animation
+
+remote.OnServerEvent:Connect(function(plr, plrKicked, msg) --fire on server event
+	local charkicker = plr.Character --get kickers player
+	local charkicked = plrKicked.Character --get kicked plr
+	
+	charkicked.HumanoidRootPart.Anchored = true --dont let him move
+	
+	charkicker.HumanoidRootPart.CFrame = charkicked.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
+	charkicker.HumanoidRootPart.CFrame = CFrame.lookAt(charkicker.HumanoidRootPart.Position, charkicked.HumanoidRootPart.Position)
+	--^ setting up CFrame
+	
+	
+	charkicker.HumanoidRootPart.Anchored = true --stop kicker from moving
+	
+	local track = charkicker.Humanoid:LoadAnimation(animation) --load anim
+	
+	track:Play() --play anim
+	
+	task.wait(1.2) --wait for anim impact
+	
+	plrKicked:Kick(msg) --kick plr with msg
+	
+	charkicker.HumanoidRootPart.Anchored = false --allowed kicker to move again
+end)
